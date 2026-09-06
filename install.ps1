@@ -1,4 +1,4 @@
-# 把 skills/ 下的每個 bob-* skill 複製到 Claude Code 的技能目錄（預設 ~/.claude/skills）。
+﻿# 把 skills/ 下的每個 bob-* skill 複製到 Claude Code 的技能目錄（預設 ~/.claude/skills）。
 # 用法：
 #   .\install.ps1            # 安裝或更新全部
 #   .\install.ps1 -Check     # 只比對差異，不寫入
@@ -18,8 +18,8 @@ Get-ChildItem $src -Directory | ForEach-Object {
     $target = Join-Path $Dest $name
     if ($Check) {
         if (-not (Test-Path $target)) { Write-Host "[缺少] $name"; $script:changed++; return }
-        $a = Get-ChildItem $_.FullName -Recurse -File | ForEach-Object { $_.FullName.Substring($_.FullName.IndexOf($name)) + "|" + (Get-FileHash $_.FullName -Algorithm MD5).Hash }
-        $b = Get-ChildItem $target -Recurse -File | ForEach-Object { $_.FullName.Substring($_.FullName.IndexOf($name)) + "|" + (Get-FileHash $_.FullName -Algorithm MD5).Hash }
+        $a = Get-ChildItem $_.FullName -Recurse -File | Where-Object { $_.FullName -notmatch "__pycache__" } | ForEach-Object { $_.FullName.Substring($_.FullName.IndexOf($name)) + "|" + (Get-FileHash $_.FullName -Algorithm MD5).Hash }
+        $b = Get-ChildItem $target -Recurse -File | Where-Object { $_.FullName -notmatch "__pycache__" } | ForEach-Object { $_.FullName.Substring($_.FullName.IndexOf($name)) + "|" + (Get-FileHash $_.FullName -Algorithm MD5).Hash }
         $diff = Compare-Object $a $b
         if ($diff) { Write-Host "[有差異] $name ($($diff.Count) 處)"; $script:changed++ } else { Write-Host "[一致] $name" }
     } else {
