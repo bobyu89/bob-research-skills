@@ -20,6 +20,11 @@
 
 ## 安裝
 
+```bash
+git clone https://github.com/bobyu89/bob-research-skills.git
+cd bob-research-skills
+```
+
 ```powershell
 .\install.ps1          # 複製到 %USERPROFILE%\.claude\skills，開新對話後生效
 .\install.ps1 -Check   # 只比對差異
