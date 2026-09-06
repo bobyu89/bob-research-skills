@@ -1,0 +1,117 @@
+name: bob-figure
+version: 1.0.0
+description: >
+  bob-figure 的靜態／動態分層宣告檔。SKILL.md 依此決定每次圖件任務要載入哪些片段。
+  兩個軸：target（交付目標：journal 或 thesis-word）與 backend（繪圖後端：python 或 r）。
+  backend 第一次使用時建立持久化偏好，之後沿用，除非使用者明確更改。
+  大量的設計、API、版型與 QA 材料留在 references，按需載入。
+
+always_load:
+  # skill 內部核心層（圖件契約、後端閘門、缺執行環境規則、隱私規則、預設立場）
+  - static/core/contract.md
+  - static/core/stance.md
+
+routes:
+  graphical_abstract_workflow:
+    detect: |
+      選用路徑，預設不走。只有當 AI 參與圖形摘要（graphical abstract）的規劃、
+      生成、修訂或稽核時才使用。純規劃與稽核任務不需要 Python／R 後端閘門。
+      此參考負責期刊政策檢查、訊息與讀者簡報、視覺設計流程、人工核驗、
+      揭露邊界與來源紀錄。
+    reference: references/ai-graphical-abstract-workflow.md
+  openrouter_image_generation:
+    detect: |
+      選用路徑，預設不走。只有當使用者明確要求用 OpenRouter、GPT Image、
+      影像生成 API 產生論文示意圖、圖形摘要、概念圖或機制圖草稿時才使用。
+      此路徑跳過 Python／R 後端閘門，因為它透過外部影像 API 產生草稿，
+      不是繪製資料。一般的研究架構圖、流程圖、示意圖預設仍用 Python／R 繪製。
+    reference: references/openrouter-image-generation.md
+    script: scripts/generate_openrouter_schematic.py
+
+preference:
+  backend_script: scripts/bob_figure_backend.py
+  config_env: BOB_FIGURE_CONFIG
+  default_config: ~/.config/bob-research-skills/bob-figure.json
+  behavior: |
+    繪圖任務先尊重本次明確的 Python／R 選擇，其次是明顯屬於某語言的輸入檔或流程，
+    再來是後端腳本回傳的已存偏好。都沒有時只問使用者一次，並把答案存起來。
+
+axes:
+  target:
+    detect: |
+      判斷這張圖最後要交到哪裡。提到碩論、論文第 N 章、圖 3-1、Word、口試、
+      計畫書、所辦格式、標楷體、300 dpi 者為 thesis-word；提到投稿、期刊、
+      reviewer、修訂稿、JAN、IJNS、JMIR、護理雜誌、單欄／雙欄寬、向量 PDF 者為
+      journal。無法判斷時預設 journal，交付時提醒可再產 thesis-word 版本。
+      同一張圖需要兩種版本時，用同一份繪圖程式碼切換片段各匯出一次。
+      thesis-word 需要中文學術慣例時另載入 ../bob-shared/core/zh-tw-academic-conventions.md；
+      需要國防醫學院碩論圖表樣式時載入 ../bob-shared/journal-formats/ndmc-thesis.md。
+    values:
+      journal:      static/fragments/target/journal.md
+      thesis-word:  static/fragments/target/thesis-word.md
+    default: journal
+    multi: false
+  backend:
+    detect: |
+      阻擋式閘門，帶持久化偏好。依序由使用者明確選擇、明顯屬於某語言的輸入檔或流程、
+      或 scripts/bob_figure_backend.py get 回傳的已存偏好決定繪圖後端。
+      沒有已存偏好時，只問一句「用 Python 還是 R？我會記住當作你的預設。」然後停下。
+      使用者回答後先用後端腳本存檔再繼續。只有使用者明確要求推薦時才推薦後端，
+      此時依 references/backend-selection.md 說明理由、存檔、繼續。
+      一旦選定，該後端對所有繪圖、預覽、匯出與視覺 QA 獨占。
+    values:
+      python:  static/fragments/backend/python.md
+      r:       static/fragments/backend/r.md
+    multi: false
+
+shared:
+  # 只能引用 bob-shared 清單中存在的檔案
+  - condition: 圖的順序要跟著結果段的論證升級走，或決定主圖與附錄圖的去向
+    path: ../bob-shared/core/results-discussion-escalation.md
+  - condition: 影像完整性（顯微、截圖、系統畫面裁切與調整）、生成式 AI 使用揭露、IRB 相關圖片去識別化
+    path: ../bob-shared/core/health-research-compliance.md
+  - condition: thesis-word 目標需要全形標點、圖表編號、標楷體、統計符號等台灣學術中文慣例
+    path: ../bob-shared/core/zh-tw-academic-conventions.md
+  - condition: thesis-word 目標需要國防醫學院碩士論文的圖表編號與圖說樣式
+    path: ../bob-shared/journal-formats/ndmc-thesis.md
+
+references:
+  on_demand:
+    - condition: 把使用者的需求轉成核心結論、證據層級、面板地圖與審查風險檢查
+      path: references/figure-contract.md
+    - condition: 規劃、重組或稽核多面板圖；決定面板角色或主圖與附錄圖的去向；讓圖序對齊結果段證據鏈
+      path: references/multipanel-evidence-architecture.md
+    - condition: 使用者尚未選 Python／R、要求推薦，或可能出現 Python／R 混用流程
+      path: references/backend-selection.md
+    - condition: 使用者選 R，或提供 R 腳本、模板、資料
+      path: references/r-workflow.md
+    - condition: 改編使用者提供或私有的 R 模板集合而不暴露來源路徑
+      path: references/r-template-index.md
+    - condition: 重用或改編內建範例、繪圖腳本、預覽圖或使用者模板來套新資料
+      path: references/asset-adaptation.md
+    - condition: 每張產生或修訂的 Python／R 圖、多面板對齊閘門、PDF 碰撞稽核、最終交付、修訂包、PDF 字級稽核、逐面板視覺 QA、影像類圖件
+      path: references/qa-contract.md
+    - condition: 非預設。只在投稿目標確實是 Nature 旗艦期刊時才開，用於其初審與製作階段的主圖與 Extended Data 規定
+      path: references/nature-article-requirements.md
+    - condition: 字型、色彩理論、版面原理、匯出政策
+      path: references/design-theory.md
+    - condition: Python 調色盤、helper 函式簽章、matplotlib 面板對齊整合、驗證規則
+      path: references/api.md
+    - condition: "Python 版型：主面板、只放圖例的軸、深色影像面板、不對稱版面"
+      path: references/common-patterns.md
+    - condition: 非預設。只在使用者要求 Nature 系列版面風格時才開
+      path: references/nature-2026-observations.md
+    - condition: "選用路徑：OpenRouter／GPT Image 生成圖形摘要、機制圖、示意圖或概念圖草稿"
+      path: references/openrouter-image-generation.md
+    - condition: 選用路徑：AI 輔助圖形摘要的規劃、生成、修訂、稽核、期刊政策檢查、科學核驗、揭露與來源紀錄
+      path: references/ai-graphical-abstract-workflow.md
+    - condition: 撰寫或稽核圖說與表題文字（標題、面板寫法、圖說內統計、資料來源套語、授權標註）
+      path: references/figure-legend-conventions.md
+    - condition: "完整走一遍：長條、趨勢、熱圖"
+      path: references/tutorials.md
+    - condition: "已驗證的 Python CSV 模板：volcano、ROC、marker dot plot、marginal density、paired plot"
+      path: references/template-catalog.md
+    - condition: "雷達、3D 球面、fill_between、散佈、消融曲線、機率與流形概念圖"
+      path: references/chart-types.md
+    - condition: 第三方 figures4papers 範例查找、版權邊界、原創重製
+      path: references/demos.md

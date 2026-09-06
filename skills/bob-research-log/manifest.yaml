@@ -1,0 +1,49 @@
+name: bob-research-log
+version: 1.0.0
+description: >
+  bob-research-log 的宣告檔。SKILL.md 依此把原始文字、照片與語音轉錄路由成
+  帶 YAML frontmatter 的 Markdown 研究日誌，只在需要時載入範本與示例。
+  適用 DBR 迭代、系統版本、使用者測試場次、IRB 進度、指導教授會議與異常紀錄。
+
+# 設計說明：核心流程短而可操作。範本與示例是支援資源，按需載入，
+# 日常記錄不必預先載入每一份示例文件。
+
+always_load:
+  - SKILL.md
+
+axes:
+  type:
+    detect: |
+      依材料內容判斷日誌類型。提到「這一輪改了什麼」「設計原則」「下一輪」「V3 改成 V4」
+      為 iteration；只列版本變更為 version；提到受試者、場景、SUS、放聲思考、觀察為
+      test-session；提到指導教授、會議、討論、決議、待辦為 meeting；提到 IRB、送審、
+      補件、核准、修正案為 irb；提到系統錯誤、幻覺、檢索失敗、token 異常、受試者退出、
+      偏離計畫為 anomaly。同一材料含多種類型時分別建檔並以 related 互連。
+    values:
+      iteration:    templates/iteration-log.md
+      version:      templates/iteration-log.md
+      test-session: templates/test-session-log.md
+      meeting:      templates/meeting-log.md
+      irb:          templates/meeting-log.md
+      anomaly:      templates/anomaly-log.md
+    multi: true
+
+templates:
+  on_demand:
+    - condition: 建立或更新專案的研究日誌總索引
+      path: templates/index.md
+    - condition: 記錄系統異常、幻覺、檢索失敗、token 成本異常、受試者中途退出、偏離核准計畫書
+      path: templates/anomaly-log.md
+    - condition: 記錄一輪 DBR 迭代或一個系統版本的變更
+      path: templates/iteration-log.md
+    - condition: 記錄指導教授會議、研究小組會議或 IRB 進度事件
+      path: templates/meeting-log.md
+    - condition: 記錄一場使用者測試（受試者代號、場景、SUS、觀察、問題）
+      path: templates/test-session-log.md
+
+references:
+  on_demand:
+    - condition: 使用者需要完整的 DBR 迭代日誌示例（護理臨床推理學習系統語境）
+      path: references/example-dbr-iteration.md
+    - condition: 使用者需要完整的使用者測試場次示例（含 SUS 原始作答與放聲思考摘錄）
+      path: references/example-test-session.md

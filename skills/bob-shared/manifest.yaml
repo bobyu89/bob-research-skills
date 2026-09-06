@@ -1,0 +1,57 @@
+name: bob-shared
+version: 1.0.0
+description: >
+  bob-* 科研 skill 集的共享參考模組宣告。此包不是獨立工作流；其他 bob-* skill
+  依需要載入下列單一 core 或 journal-formats 檔案，讀完後回到自己的工作流、
+  輸出格式與品質檢查。
+
+# 設計備註：絕對不要預載整包。請求的 skill 只載入下列清單中被指名的那一個檔案。
+
+always_load: []
+
+core:
+  on_demand:
+    - condition: 起草或潤飾前需要用「讀者五問」（相關、新穎、可信、可用、邊界）決定段落順序
+      path: core/reader-workflow.md
+    - condition: 套用 paper_type 軸前，判定稿件屬於 research、methods、hypothesis、algorithmic、review、qualitative、mixed-methods、dbr、scoping-review、quality-improvement 哪一型
+      path: core/paper-type-taxonomy.md
+    - condition: 涉及引用歸屬、研究倫理聲明、生成式 AI 使用的紅黃綠燈判斷、或不得捏造引文與數字的守則
+      path: core/ethics.md
+    - condition: 任何寫作、潤飾、審稿或製圖工作開始前，需要建立中英對照一致的術語帳
+      path: core/terminology-ledger.md
+    - condition: 審核已存在或多輪修訂過的稿件，找術語、單位、數字精度、主張與表格矛盾等累積漂移；搭配 scripts/check_consistency.py
+      path: core/consistency-sweep.md
+    - condition: 起草、重組、壓縮或依審查意見修改主文（尤其結果）；把結果分類到主文、圖說、附錄／補充資料；執行段落必要性、刪除、統計位置與主張重複檢查
+      path: core/main-text-discipline.md
+    - condition: 起草或潤飾任何討論段；校準語氣強度；把限制寫成主張邊界；讓未來研究對應具體不確定性
+      path: core/discussion-argument-language.md
+    - condition: 起草、重組或潤飾前言或碩士論文第一章；建立背景、重要性、缺口、目的的問題漏斗；做前言與結果的對齊審核
+      path: core/introduction-funnel.md
+    - condition: 起草、重組或潤飾結構式或非結構式摘要；中英摘要並列；選一個主要主張與必要數字
+      path: core/abstract-evidence-chain.md
+    - condition: 起草、重組或潤飾結果與討論、碩士論文第四章與第五章；依研究設計（DBR、介入、質性、混合方法）選擇證據鏈原型；審核主張推進與討論是否重演結果
+      path: core/results-discussion-escalation.md
+    - condition: 稿件涉及 IRB、知情同意、個資保護、報告準則路由（CONSORT、STROBE、PRISMA-ScR、COREQ、SRQR、CHERRIES、TRIPOD+AI 等）、DBR 報告要素、生成式 AI 揭露或資料可用性
+      path: core/health-research-compliance.md
+    - condition: 產出或潤飾中文學術文本；需要全形標點、數字與統計符號、量表定名、圖表編號、標楷體、APA 中文慣例或大陸用語對照表
+      path: core/zh-tw-academic-conventions.md
+
+journal_formats:
+  on_demand:
+    - condition: journal=generic-health 或目標期刊未指定；需要健康科學期刊的 IMRaD、結構式摘要、聲明段落與報告準則的通用預設
+      path: journal-formats/generic-health.md
+    - condition: journal=nursing；投 JAN、IJNS、NET、NEP、JNR、CIN、BMC Med Educ 等英文護理或醫學教育期刊的投稿前必查清單
+      path: journal-formats/nursing-journals.md
+    - condition: journal=jmir；投 JMIR 系列期刊，需要五段結構式摘要、Trial registration、Multimedia Appendix、CONSORT-EHEALTH 或 CHERRIES 的慣例
+      path: journal-formats/jmir.md
+    - condition: journal=taiwan-nursing；投護理雜誌、台灣專科護理師學刊、醫學教育等中文期刊，需要中英摘要並列與 APA 中文格式慣例
+      path: journal-formats/taiwan-nursing.md
+    - condition: journal=ndmc-thesis 或 task=thesis-chapter；撰寫或排版國防醫學院碩士論文第一章至第五章
+      path: journal-formats/ndmc-thesis.md
+
+quality_tools:
+  consistency_script: scripts/check_consistency.py
+  use_when: 審核完整稿件或多輪修訂後的稿件
+  purpose: 提示術語變體、等值長度以不同單位表示、同一數值以不同精度出現
+  script_resolution: 相對於 bob-shared 套件目錄解析，絕不相對於使用者的工作目錄
+  tests: tests/test_check_consistency.py

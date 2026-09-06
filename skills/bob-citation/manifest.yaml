@@ -1,0 +1,59 @@
+name: bob-citation
+version: 1.0.0
+description: >
+  bob-citation 的靜態／動態分層宣告。SKILL.md 依此決定每次載入哪些片段：
+  核心層（principles、workflow、zh-tw-mode）每次都讀，workflow 軸決定
+  載入 find-support、verify 或 export 的流程檔，深度參考只在需要時開。
+
+# 設計說明：bob-citation 是三條線性流程（找支持文獻、查證引用、匯出轉檔），
+# 差異在流程本身而不在文體，所以只有一個內容軸 workflow。期刊範圍、年份、
+# 領域、輸出格式都是執行期參數，在 SKILL.md 步驟 2 用一行話確認即可。
+# 共享層只引用 bob-shared 的 ethics（引用倫理與 AI 揭露），其餘與寫作相關的
+# 共享片段本 skill 用不到。
+
+always_load:
+  - static/core/principles.md
+  - static/core/zh-tw-mode.md
+  - static/core/workflow.md
+
+axes:
+  workflow:
+    detect: |
+      使用者要「幫這段配文獻、找支持文獻、補引用、這句有沒有文獻」→ find-support。
+      使用者貼參考文獻清單、.bib、.ris，或說「查證引用、核對參考文獻、DOI 檢查、
+      這些引用是真的嗎、參考文獻驗證」→ verify。
+      使用者說「匯出 RIS、轉 BibTeX、EndNote、Zotero 匯入、nbib 轉檔、合併去重」→ export。
+      可以多選；先 find-support 再 export 是常見組合。
+    values:
+      find-support: references/workflows/find-support.md
+      verify:       references/workflows/verify.md
+      export:       references/workflows/export.md
+    default: verify
+    multi: true
+
+references:
+  on_demand:
+    - condition: 把中文主張轉成英文檢索式、決定支持等級、常見誤引型態
+      path: references/search-strategy.md
+    - condition: 逐欄位比對規則、🔴🟡🟢 嚴重度矩陣、護理文獻案例
+      path: references/field-comparison-matrix.md
+    - condition: 錯誤的根本原因（卷年與上線年、Early Access 漂移、作者名、文章號）與判斷規則
+      path: references/common-patterns.md
+    - condition: 從 .docx、.txt、.bib、.tex 抽出引用與識別碼的規則與分類標籤
+      path: references/citation-parser.md
+    - condition: 合併多來源結果或匯出前去重的鍵值與合併偏好
+      path: references/dedup-engine.md
+    - condition: RIS、BibTeX、nbib 欄位對應、必填欄位、跳脫規則、格式選擇
+      path: references/ris-bibtex-format.md
+    - condition: EndNote 匯入 RIS、Zotero 手動匯入、作者完整性預檢
+      path: references/ris-endnote-zotero.md
+    - condition: 執行 scripts/verify_dois.py 或 scripts/ris_tools.py 的完整參數與範例輸出
+      path: references/script-usage.md
+    - condition: 引用倫理、生成式 AI 使用揭露、紅黃綠燈框架（bob-shared 共享層）
+      path: ../bob-shared/core/ethics.md
+
+scripts:
+  - path: scripts/verify_dois.py
+    purpose: DOI → Crossref、PMID → PubMed esummary 欄位比對，輸出 JSON 與 Markdown
+  - path: scripts/ris_tools.py
+    purpose: RIS／BibTeX／nbib 互轉、去重、完整性檢查、由 PMID 或 DOI 取得書目

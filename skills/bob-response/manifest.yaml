@@ -1,0 +1,71 @@
+name: bob-response
+version: 1.0.0
+description: >
+  靜態／動態分層的宣告式 manifest。SKILL.md 依此決定審稿意見回覆、修訂版
+  cover letter 或口試委員意見回覆表請求時要載入哪些片段與範本。
+
+# 設計說明：bob-response 是線性的參數化流程（intake → 擷取編輯與審稿人項目
+# → 分類 → 策略 → 擬稿 → 對應修改位置 → QA → 打包）。它的變化（任務模式
+# draft/audit/revise/triage-only/cover-letter/revision-package/latex-template/
+# committee-response/appeal-like、決定類型、語言）在執行期由
+# references/intake-and-routing.md 辨識，不靠載入不同的大段內容。因此沒有
+# 內容軸；切分方式是核心（每次載入）加上按需的 references。bob-response 保有
+# 自己的立場與來源依據，但在回覆提議或執行文稿修改時載入共用的主文精簡規範。
+
+always_load:
+  - static/core/stance.md
+  - static/core/workflow.md
+
+references:
+  on_demand:
+    - condition: 審稿或編輯意見導致主文新增、刪除、壓縮、移置或統計細節變動時；分類該結果、防止修訂累積、區分主文／圖說／附錄功能，並執行刪減、段落必要性與主張重複檢查
+      path: ../bob-shared/core/main-text-discipline.md
+    - condition: 修訂輪次中掃描文稿內部數字、精度、術語與單位一致性
+      path: ../bob-shared/core/consistency-sweep.md
+    - condition: 審稿人質疑 IRB、知情同意、報告準則（CONSORT、STROBE、PRISMA-ScR、COREQ 等）或生成式 AI 使用揭露時，先確認準則路由再擬回覆
+      path: ../bob-shared/core/health-research-compliance.md
+    - condition: 產出繁中回覆表、口試委員意見回覆表或中文期刊修訂說明時，套用台灣學術中文慣例與用語對照
+      path: ../bob-shared/core/zh-tw-academic-conventions.md
+    - condition: 投稿台灣中文護理期刊（護理雜誌、護理研究等）的修訂回覆
+      path: ../bob-shared/journal-formats/taiwan-nursing.md
+    - condition: 擬稿之前；辨識任務模式、執行主要／次要修訂決定關卡、解析貼上的退修信、最少輸入、編輯項目編號、就緒狀態與是否需要提問
+      path: references/intake-and-routing.md
+    - condition: 來源優先順序、規則出處，或「政策」與「建議」的界線
+      path: references/source-basis.md
+    - condition: 回覆包格式、互盲審稿人分檔、逐點回覆信結構、cover letter 結構、修改稿標示規則、交付檔路由
+      path: references/response-structure.md
+    - condition: 使用者要求 Markdown 或 Word 版逐點回覆表、修訂版 cover letter（護理期刊語境示例）
+      path: templates/response-letter.md
+    - condition: 使用者要求修訂版 cover letter（英文與繁中兩版）
+      path: templates/revision-cover-letter.md
+    - condition: 使用者明確要求 LaTeX cover letter、LaTeX 逐點回覆、紅字標示修改稿範本或已填 .tex 修訂包（選用）
+      path: references/latex-templates.md
+    - condition: 依類別與嚴重程度分類審稿意見
+      path: references/comment-taxonomy.md
+    - condition: 動作標籤、逐項工作狀態、追蹤表欄位、阻斷狀態、缺少輸入的狀態
+      path: references/action-mapping.md
+    - condition: 建議句型、禁用句型、不同意的語氣，或審稿人漏看了文中已有的內容
+      path: references/tone-and-stance.md
+    - condition: 使用者以繁體中文溝通或提供中文作者筆記；稽核台灣作者常見的回覆問題（過度道歉、全盤接受、回覆與修改不一致、把「已在文中說明」當回覆）
+      path: references/chinese-author-alignment.md
+    - condition: 投稿台灣中文期刊（護理雜誌、護理研究、台灣專科護理師學刊、醫學教育）並收到退修通知；修訂說明表、修改處標示、一稿一表慣例
+      path: references/taiwan-journal-norms.md
+    - condition: 碩士論文計畫書口試或學位論文口試後的口試委員意見回覆表（委員／意見／修改內容／頁碼）
+      path: references/thesis-committee-response.md
+    - condition: 口試委員意見回覆表的 Markdown／Word 範本
+      path: templates/committee-response-table.md
+    - condition: 做不到的實驗、事實錯誤、審稿人意見衝突或重複、審稿人可見性隔離、引用文獻、統計、合規、轉投或申訴類案例
+      path: references/difficult-cases.md
+    - condition: 定稿之前，或稽核既有的回覆草稿
+      path: references/qa-checklist.md
+    - condition: 文稿與回覆信一起修改、修訂包已經過不只一輪編輯，或整包即將交付；引句同步、紅字標示基準、刪除連鎖影響、頁碼易變、文稿數字自洽、術語掃描、清稿與標示稿交付關卡
+      path: references/package-consistency-audit.md
+
+quality_tools:
+  package_consistency_script: scripts/check_package_consistency.py
+  use_when: LaTeX 修訂包第一版完成後、每次文稿修改後、交付前（Word 稿不適用腳本，改人工核對）
+  purpose: 展開靜態 LaTeX input、比對回覆信引句與宣告的替換是否逐字存在於文稿、配對審稿意見與作者回覆數量、在正規化增刪標示後比較清稿與標示稿
+  script_resolution: 相對於載入的 SKILL.md 目錄解析，不是使用者的工作目錄
+  tests:
+    - tests/test_package_consistency.py
+    - tests/test_response_instruction_contracts.py

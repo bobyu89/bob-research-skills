@@ -1,0 +1,33 @@
+name: bob-statistics
+version: 1.0.0
+description: >
+  護理與健康科學論文統計報告 skill 的宣告式清單。SKILL.md 以此保持「一定要載入」的
+  報告規則精簡，只在論文段落、表格、圖說或審稿意見需要時，才載入專題檢查表。
+
+# 設計說明：bob-statistics 是保守的報告與審查 skill。預設路徑一定需要來源階層、
+# 最低報告要求與 APA 7 統計格式；量表信效度、SPSS 轉表、樣本數、圖說等較重的
+# 專題檔維持按需載入，讓單純改寫一段「資料處理與分析」不必載入所有檢查表。
+
+always_load:
+  - references/source-basis.md
+  - references/statistical-reporting.md
+  - references/apa7-statistics-format.md
+
+references:
+  on_demand:
+    - condition: 出現巢狀或重複量數資料、偽重複、多重比較、相關或迴歸過度詮釋、離群值處理不明、小樣本卻用強烈語氣，或只以顯著性下結論
+      path: references/common-failure-modes.md
+    - condition: 涉及量表或問卷的來源與授權、題數與計分、信度（Cronbach's α、KR-20、ICC）、效度（I-CVI、S-CVI/Ave、EFA／CFA 指標）、翻譯與回譯、SUS 計分與常模詮釋、自編問卷專家效度流程
+      path: references/nursing-instruments-reporting.md
+    - condition: 使用者貼上 SPSS（或 jamovi、R）輸出要求轉成 APA 表格，或需要檢查 p = .000、漏報效果量、忽略 Levene 檢定、多重比較未校正等常見錯誤
+      path: references/spss-output-to-apa-table.md
+    - condition: 討論樣本數、G*Power 輸入參數與報告句型、效果量慣例、質性研究的資訊力或飽和論述、DBR 或可用性研究（SUS）的樣本數依據與限制、失訪率加成
+      path: references/sample-size-and-power.md
+    - condition: 檢查圖說、每個面板的 n、誤差線定義、星號標記、盒鬚圖或小提琴圖慣例、補充資料註或圖上的統計標註
+      path: references/figure-statistics.md
+    - condition: 最終審查 QA、嚴重度標籤（P0/P1/P2）、審稿風險摘要，或起草統計類審稿意見與口試意見的回覆
+      path: references/reviewer-checklist.md
+    - condition: 同一統計量出現在摘要、正文、表格或圖說多處，或區間術語有疑義：同一指標在表與文中小數位不同、SD 與 Std 等縮寫漂移、把預測區間寫成信賴區間、誤差線重疊卻描述為優於對照
+      path: ../bob-shared/core/consistency-sweep.md
+    - condition: 需要對照 IRB 與知情同意敘述、EQUATOR 準則路由表（CONSORT、STROBE、PRISMA-ScR、COREQ、CHERRIES、TRIPOD+AI、DBR 報告要素），或生成式 AI 使用揭露如何寫進方法段
+      path: ../bob-shared/core/health-research-compliance.md

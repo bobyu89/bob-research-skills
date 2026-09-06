@@ -1,0 +1,128 @@
+name: bob-polishing
+version: 1.0.0
+description: >
+  bob-polishing 的靜態／動態分層宣告。SKILL.md 依此決定每次潤飾要載入哪些
+  fragment。路徑相對於本 skill 根目錄；../bob-shared/ 只引用規格第 5 節列出的檔案。
+
+always_load:
+  # 共用層（bob-shared）
+  - ../bob-shared/core/reader-workflow.md
+  - ../bob-shared/core/paper-type-taxonomy.md
+  - ../bob-shared/core/ethics.md
+  - ../bob-shared/core/terminology-ledger.md
+  # 本 skill 核心
+  - static/core/stance.md
+  - static/core/failure-modes.md
+  - static/core/output-format.md
+
+axes:
+  paper_type:
+    detect: |
+      判斷被潤飾的是哪一種論文或章節。先用使用者的說法，沒有就從文本推斷。
+      預設 research。有迭代週期、系統版本、設計原則的用 dbr；同時有量性與
+      質性資料且談整合的用 mixed-methods；只有訪談、焦點團體、放聲思考、
+      主題分析的用 qualitative；概念分析不在本軸，轉交 concept-analysis-master。
+    values:
+      research:       static/fragments/paper_type/research.md
+      methods:        static/fragments/paper_type/methods.md
+      hypothesis:     static/fragments/paper_type/hypothesis.md
+      algorithmic:    static/fragments/paper_type/algorithmic.md
+      review:         static/fragments/paper_type/review.md
+      qualitative:    static/fragments/paper_type/qualitative.md
+      mixed-methods:  static/fragments/paper_type/mixed-methods.md
+      dbr:            static/fragments/paper_type/dbr.md
+    default: research
+    multi: false
+
+  section:
+    detect: |
+      找出使用者要潤飾的章節，可以多個。碩論的第一章對應 intro、第二章對應
+      intro 加 review 型的文獻回顧、第三章 methods、第四章 results、第五章
+      discussion 與 conclusion。不確定且會影響潤飾時先問；使用者只給一段
+      沒有章節脈絡的文字時才跳過本軸。
+    values:
+      abstract:       static/fragments/section/abstract.md
+      intro:          static/fragments/section/intro.md
+      results:        static/fragments/section/results.md
+      discussion:     static/fragments/section/discussion.md
+      conclusion:     static/fragments/section/conclusion.md
+      title:          static/fragments/section/title.md
+      methods:        static/fragments/section/methods.md
+    multi: true
+
+  language:
+    detect: |
+      從草稿本身判斷。草稿是中文且使用者要的是中文成品，用 zh-tw；草稿是中文
+      或帶明顯中文結構的英文，且使用者要英文成品，用 zh-tw-to-en；草稿是英文
+      且要英文成品，用 en。使用者說「潤稿」「潤飾」而稿子是中文，預設 zh-tw；
+      說「中翻英」「改寫成學術英文」用 zh-tw-to-en。
+    values:
+      en:             static/fragments/language/en.md
+      zh-tw:          static/fragments/language/zh-tw.md
+      zh-tw-to-en:    static/fragments/language/zh-tw-to-en.md
+    default: en
+    multi: false
+
+  journal:
+    detect: |
+      使用者提到護理雜誌、護理研究、台灣專科護理師學刊、醫學教育等台灣中文
+      期刊用 taiwan-nursing；提到 JMIR 任何子刊用 jmir；提到 JAN、IJNS、NET、
+      NEP、JNR、CIN 等國際護理期刊用 nursing；提到碩士論文、口試、所辦、
+      第幾章用 ndmc-thesis；明確指定 Nature 系列才用 nature-family。其餘用
+      generic-health。
+    values:
+      generic-health: static/fragments/journal/generic-health.md
+      nursing:        static/fragments/journal/nursing.md
+      jmir:           static/fragments/journal/jmir.md
+      taiwan-nursing: static/fragments/journal/taiwan-nursing.md
+      ndmc-thesis:    static/fragments/journal/ndmc-thesis.md
+      nature-family:  static/fragments/journal/nature-family.md
+    default: generic-health
+    multi: false
+
+references:
+  on_demand:
+    - condition: 潤飾、重組或精簡結果段或整篇主文；決定內容放主文、圖說還是附錄／補充資料；防止修訂稿堆積；減少統計或主張重複；做段落必要性檢查
+      path: ../bob-shared/core/main-text-discipline.md
+    - condition: 結果段讀起來像分析清單；需要把結果重組成主張遞進；判斷局部詮釋是否推進主張；區分必要回顧與重複論證
+      path: ../bob-shared/core/results-discussion-escalation.md
+    - condition: 潤飾、重組或稽核任何討論段；修復從具體發現到有邊界意涵的反向漏斗；分辨詮釋與結果複述；校準情態動詞與保留語；讓限制對應具體主張；把泛泛的未來研究改成能解決不確定性的下一步
+      path: ../bob-shared/core/discussion-argument-language.md
+    - condition: 潤飾或重組前言或整篇敘事；建立問題漏斗（背景→重要性→缺口→目的）；把文獻目錄改成已知與未知的論證；讓前言的問題與結果的答案對齊
+      path: ../bob-shared/core/introduction-funnel.md
+    - condition: 潤飾或重組摘要；把摘要壓縮成證據鏈；處理結構式摘要各段任務或非結構式摘要的主張選擇
+      path: ../bob-shared/core/abstract-evidence-chain.md
+    - condition: 方法段涉及 IRB、知情同意、個資、報告準則（CONSORT、STROBE、PRISMA-ScR、COREQ、SRQR、CHERRIES、TRIPOD+AI、DBR 報告要素）或生成式 AI 使用揭露，需要對照必要元素
+      path: ../bob-shared/core/health-research-compliance.md
+    - condition: 潤飾學術中文時需要全形標點、數字與單位、量表名稱、統計符號斜體、圖表編號、標楷體、APA 中文引用慣例或大陸用語對照表的完整規範
+      path: ../bob-shared/core/zh-tw-academic-conventions.md
+    - condition: 潤飾整篇手稿而非一段，或稿子已經過多輪修改；掃描累積的術語、單位、數字精度漂移、主要數字對不上、主張與自己的表格矛盾、時態不一致、正文複述圖表
+      path: ../bob-shared/core/consistency-sweep.md
+    - condition: 使用者要求去 AI 腔、太像 AI 寫的、降 AI 感，且要維持學術體；需要學術英文或學術中文的套話、AI 偏好詞、結構性 AI 腔清單，或要判斷是否轉交 speak-human-tw
+      path: references/ai-trace-reduction.md
+    - condition: Word 排版問題：表格跨頁與標題列重複、圖說位置、標楷體與 Times New Roman 混排、段落間距、目錄 F9 更新、分節與頁碼、標題落在頁尾、孤行
+      path: references/word-layout.md
+    - condition: LaTeX 排版問題：鬆散頁面、標題被擠到頁尾、圖片填不滿或跨頁、Float too large、多面板排列、補充資料看起來空
+      path: references/latex-layout.md
+    - condition: 需要章節層級的 move 順序或片語型式（Introduction、Literature Review、Methods、Results、Discussion、Conclusion、Abstract、Title）
+      path: references/section-moves.md
+    - condition: 需要保留語、轉折、證據、限制、未來研究的片語家族與強度分級
+      path: references/phrasebank-playbook.md
+    - condition: 需要學術英文的體例、語域、冠詞、數字與單位、過度宣稱的機械檢查
+      path: references/style-guardrails.md
+    - condition: 需要更深的寫作策略原則（沙漏結構、寫作順序、主張／證據／邊界、引用即定位、對先前研究的公平性）
+      path: references/writing-strategy.md
+    - condition: 需要已發表文章層級的段落型式（摘要六步、前言五步、結果證據階梯、討論反向漏斗）作為診斷工具；來源為 Nature 系列語料，只當型式參考
+      path: references/published-article-patterns.md
+    - condition: 需要連接詞、保留語、成效動詞的語料頻率校準；來源為 2025 年 Nature Communications 電腦科學文章，只當直覺參考，不當規則
+      path: references/nat-comms-2025-diction.md
+    - condition: 目標是國際護理期刊，需要投稿前必查項目與各刊差異（不含寫死的數字）
+      path: ../bob-shared/journal-formats/nursing-journals.md
+    - condition: 目標是 JMIR 系列，需要結構式摘要段名、Trial registration、Multimedia appendix、CHERRIES 或 CONSORT-EHEALTH 的要求
+      path: ../bob-shared/journal-formats/jmir.md
+    - condition: 目標是台灣中文護理期刊，需要中英摘要並列與 APA 中文格式慣例
+      path: ../bob-shared/journal-formats/taiwan-nursing.md
+    - condition: 目標是國防醫學院碩士論文，需要章節結構、編號、字型、圖表樣式慣例
+      path: ../bob-shared/journal-formats/ndmc-thesis.md
+    - condition: 目標是健康科學期刊但沒有更具體的 fragment，需要通用格式預設（IMRaD、結構式摘要、關鍵字、報告準則、資料可用性、利益衝突）
+      path: ../bob-shared/journal-formats/generic-health.md

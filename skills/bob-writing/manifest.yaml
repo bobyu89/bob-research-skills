@@ -1,0 +1,179 @@
+name: bob-writing
+version: 1.0.0
+description: >
+  靜態／動態分層的宣告式清單。SKILL.md 依此決定每次撰寫、重組、碩論章節或
+  首次投稿任務要載入哪些 fragment。改自上游（來源見 UPSTREAM.md）；共用層改為
+  ../bob-shared/。
+
+always_load:
+  # 共用層（bob-shared）：與 bob-polishing、bob-reviewer 等共用
+  - ../bob-shared/core/reader-workflow.md
+  - ../bob-shared/core/paper-type-taxonomy.md
+  - ../bob-shared/core/ethics.md
+  - ../bob-shared/core/terminology-ledger.md
+  # skill 本地核心
+  - static/core/stance.md
+  - static/core/workflow.md
+  - static/core/output-format.md
+
+axes:
+  task:
+    detect: |
+      使用者要求首次投稿材料（投稿信、cover letter、標題頁、highlights、
+      作者貢獻、資料可用性聲明、推薦審稿人、投稿檢核）時用
+      submission-package。使用者說「碩論第 X 章」「計畫書前三章」「緒論／
+      文獻探討／研究方法／研究結果／討論與結論」且語境是學位論文時用
+      thesis-chapter（同時依章載入對應 section fragment）。其餘章節撰寫與
+      論證發展用 manuscript。編輯決定後的修訂信、逐點回覆屬 bob-response，
+      不在本 skill。
+    values:
+      manuscript:          static/fragments/task/manuscript.md
+      submission-package:  static/fragments/task/submission-package.md
+      thesis-chapter:      static/fragments/task/thesis-chapter.md
+    default: manuscript
+    multi: false
+
+  paper_type:
+    detect: |
+      判斷論文或章節的類型，預設 research。先用使用者明說的框架，再從材料
+      推斷。健康科學常見對應：類實驗、橫斷、世代、量表發展 → research 或
+      methods；訪談、焦點團體、放聲思考、現象學、紮根理論 → qualitative；
+      同時有量性與質性股且有整合目的 → mixed-methods；有迭代設計、版本、
+      設計原則 → dbr；系統效能比較、模型評估 → algorithmic；敘述性回顧 →
+      review（含系統性檢索的範疇性回顧交 scoping-review-master；概念分析交
+      concept-analysis-master）。DBR 論文的各輪評估資料可同時載入
+      qualitative 或 mixed-methods 補段落規則。
+    values:
+      research:       static/fragments/paper_type/research.md
+      methods:        static/fragments/paper_type/methods.md
+      hypothesis:     static/fragments/paper_type/hypothesis.md
+      algorithmic:    static/fragments/paper_type/algorithmic.md
+      review:         static/fragments/paper_type/review.md
+      qualitative:    static/fragments/paper_type/qualitative.md
+      mixed-methods:  static/fragments/paper_type/mixed-methods.md
+      dbr:            static/fragments/paper_type/dbr.md
+    default: research
+    multi: true
+
+  section:
+    detect: |
+      辨識使用者要寫或重建的章節，可多選。含糊且影響載入時先問。標題與
+      摘要通常最後寫但要提早規劃。健康科學的結果章節用 results；演算法或
+      系統比較型（baseline、ablation、benchmark）才用 experiments。碩論章節
+      對應：thesis-ch1 → intro、thesis-ch2 → literature-review、thesis-ch3 →
+      method、thesis-ch4 → results、thesis-ch5 → discussion + conclusion；
+      thesis-chN 值本身指向 task/thesis-chapter.md，載入時要同時載入對應的
+      section fragment。
+    values:
+      abstract:          static/fragments/section/abstract.md
+      intro:             static/fragments/section/intro.md
+      literature-review: static/fragments/section/literature-review.md
+      related-work:      static/fragments/section/related-work.md
+      method:            static/fragments/section/method.md
+      results:           static/fragments/section/results.md
+      experiments:       static/fragments/section/experiments.md
+      discussion:        static/fragments/section/discussion.md
+      conclusion:        static/fragments/section/conclusion.md
+      title:             static/fragments/section/title.md
+      thesis-ch1:        static/fragments/task/thesis-chapter.md
+      thesis-ch2:        static/fragments/task/thesis-chapter.md
+      thesis-ch3:        static/fragments/task/thesis-chapter.md
+      thesis-ch4:        static/fragments/task/thesis-chapter.md
+      thesis-ch5:        static/fragments/task/thesis-chapter.md
+    multi: true
+
+  language:
+    detect: |
+      依「輸出」語言決定，不只看輸入。目標是台灣繁體中文正文（碩論、護理
+      雜誌、護理研究、台灣專科護理師學刊、醫學教育）用 zh-tw。輸入是中文
+      或中英夾雜筆記、目標是英文稿件用 zh-tw-to-en。輸入與輸出都是英文用
+      en。不確定時看 journal 軸：taiwan-nursing 與 ndmc-thesis 預設 zh-tw。
+    values:
+      en:            static/fragments/language/en.md
+      zh-tw:         static/fragments/language/zh-tw.md
+      zh-tw-to-en:   static/fragments/language/zh-tw-to-en.md
+    default: en
+    multi: false
+
+  journal:
+    detect: |
+      預設 generic-health。使用者指定 JAN、IJNS、NET、NEP、JNR、CIN、BMC
+      Nursing 等英文護理期刊用 nursing；JMIR 任一子刊用 jmir；護理雜誌、
+      護理研究、台灣專科護理師學刊、醫學教育等台灣中文期刊用
+      taiwan-nursing；學位論文用 ndmc-thesis（task=thesis-chapter 時預設）。
+      nature、nature-family、nat-comms、nat-mach-intell 為上游保留、非預設、
+      未經本集驗證，只在使用者明確指定 Nature 系列時載入，且所有數字以期刊
+      官網為準。
+    values:
+      generic-health:  static/fragments/journal/generic-health.md
+      nursing:         static/fragments/journal/nursing.md
+      jmir:            static/fragments/journal/jmir.md
+      taiwan-nursing:  static/fragments/journal/taiwan-nursing.md
+      ndmc-thesis:     static/fragments/journal/ndmc-thesis.md
+      nature:          static/fragments/journal/nature.md
+      nature-family:   static/fragments/journal/nature-family.md
+      nat-comms:       static/fragments/journal/nat-comms.md
+      nat-mach-intell: static/fragments/journal/nat-mach-intell.md
+    default: generic-health
+    multi: false
+
+references:
+  on_demand:
+    # 共用層
+    - condition: 撰寫、重組或壓縮結果章節或整篇主文；決定主文、表格、附錄的配置；防止修訂堆積；減少統計或主張重複；建立最短充分證據鏈
+      path: ../bob-shared/core/main-text-discipline.md
+    - condition: 撰寫或重組結果與討論及其邊界；測試主張推進；判斷局部解釋或穩健性是否推進主張；區分必要回顧與重複論證
+      path: ../bob-shared/core/results-discussion-escalation.md
+    - condition: 撰寫、重組或稽核任何討論章節；選開場錨點與反向漏斗；與文獻定位；校準情態動詞；寫主張專屬的限制；由具名不確定性推導未來研究
+      path: ../bob-shared/core/discussion-argument-language.md
+    - condition: 撰寫或重組緒論、碩論第一章或整篇敘事；建立背景→重要性→缺口→目的的問題漏斗；對齊緒論問題與結果答案
+      path: ../bob-shared/core/introduction-funnel.md
+    - condition: 撰寫或重組摘要（結構式或非結構式）；壓縮成證據鏈；選一個主主張、一到兩個決定性支撐、必要數字、有邊界的結論
+      path: ../bob-shared/core/abstract-evidence-chain.md
+    - condition: 涉及 IRB、知情同意、個資、報告準則路由（CONSORT、STROBE、PRISMA-ScR、COREQ、SRQR、CHERRIES、TRIPOD+AI、DBR 報告要素）、生成式 AI 使用揭露
+      path: ../bob-shared/core/health-research-compliance.md
+    - condition: 以學術中文撰寫時的標點、數字、量表名稱、統計符號、圖表編號、字型、APA 中文慣例、大陸用語對照
+      path: ../bob-shared/core/zh-tw-academic-conventions.md
+    - condition: 全稿一致性掃描（術語、縮寫、數字、表號）
+      path: ../bob-shared/core/consistency-sweep.md
+    - condition: journal=generic-health 且需要 IMRaD、結構式摘要、關鍵字、報告準則清單、資料可用性、利益衝突的通用要求
+      path: ../bob-shared/journal-formats/generic-health.md
+    - condition: journal=nursing 且需要各護理期刊的投稿前必查項目
+      path: ../bob-shared/journal-formats/nursing-journals.md
+    - condition: journal=jmir 且需要結構式摘要五段、Trial registration、Multimedia appendix、CHERRIES 或 CONSORT-EHEALTH
+      path: ../bob-shared/journal-formats/jmir.md
+    - condition: journal=taiwan-nursing 且需要中英摘要並列、APA 中文格式、各刊文章類型
+      path: ../bob-shared/journal-formats/taiwan-nursing.md
+    - condition: task=thesis-chapter 或 journal=ndmc-thesis 且需要章節結構、標點、字型、表圖編號、目錄等格式慣例
+      path: ../bob-shared/journal-formats/ndmc-thesis.md
+    # skill 本地深度參考（多為英文，保留上游）
+    - condition: 需要章節層級結構、論證順序或已發表文章的模式
+      path: references/article-architecture.md
+    - condition: 使用者明確以 Nature Communications 或 CS/AI 類型稿件為目標，需要體裁感知的實證結構與用詞偏好（非預設）
+      path: references/nat-comms-2025-corpus.md
+    - condition: 撰寫或修訂摘要，特別是 challenge-contribution 形式
+      path: references/abstract.md
+    - condition: 使用者明確要求跨領域廣泛讀者的 summary paragraph 或 Nature 式開場（非預設）
+      path: references/summary-paragraph-broad-audience.md
+    - condition: 撰寫或修訂緒論的任務框架、技術挑戰、貢獻框架（方法或系統型論文）
+      path: references/introduction.md
+    - condition: 把相關研究或文獻探討重建為主題綜合
+      path: references/related-work.md
+    - condition: 撰寫方法章節、系統模組、模組動機、技術優勢（系統或演算法型）
+      path: references/method.md
+    - condition: 規劃或撰寫 baseline、ablation、metrics 的實驗章節（演算法型）
+      path: references/experiments.md
+    - condition: 撰寫有邊界的結論（貢獻、證據、影響、限制）
+      path: references/conclusion.md
+    - condition: 使用者問某段落是否流暢；用反向大綱
+      path: references/paragraph-flow.md
+    - condition: 投稿前自我審查、退稿風險稽核、主張與證據對齊
+      path: references/paper-review.md
+    - condition: 首次投稿信、標題頁、highlights、聲明、推薦審稿人、完整首次投稿包、投稿就緒稽核
+      path: references/submission-package.md
+    - condition: task=submission-package 需要 Markdown 或 Word 版投稿信範本（英文與中文）
+      path: templates/submission/cover-letter.md
+    - condition: 中文筆記轉英文時需要 language fragment 之外的修法與邊緣案例
+      path: references/chinese-author-workflow.md
+    - condition: 使用者要具體的摘要、緒論、方法範例（多為 CS/AI 範例，供結構參考）
+      path: references/examples/index.md

@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+*.collision-audit.*
+.DS_Store
+Thumbs.db

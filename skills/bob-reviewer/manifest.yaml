@@ -1,0 +1,67 @@
+name: bob-reviewer
+version: 1.0.0
+description: >
+  bob-reviewer 的宣告式 manifest。SKILL.md 保持精簡的 router，
+  審稿原則來源、五軸、設計別檢查閘、報告結構、角色邊界與 QA 只在對應階段載入。
+  Declarative manifest for the health-science pre-submission reviewer workflow.
+
+# 設計說明：模擬審稿必須落地（只用稿件事實與公開審稿原則）、互盲、不捏造。
+# 來源基礎與 QA 對每份最終報告都相關；設計別檢查閘只在稿件研究設計明確時載入。
+
+always_load:
+  - references/source-basis.md
+  - references/review-axes.md
+
+axes:
+  study_design:
+    detect: |
+      從稿件的方法段或作者說明判斷研究設計。可多選（例如 mixed-methods 同時載入
+      quantitative 與 qualitative 的檢查閘）。不確定對應哪份 EQUATOR 準則時，先呼叫
+      equator-guideline-finder，再回到本 skill。設計不明確時不載入任何檢查閘，只用五軸審。
+      所有值都指向同一個檔案；只讀對應章節（章節標題列於 section 欄）。
+    values:
+      quantitative:       references/health-research-review-gates.md
+      qualitative:        references/health-research-review-gates.md
+      mixed-methods:      references/health-research-review-gates.md
+      review:             references/health-research-review-gates.md
+      education-dbr:      references/health-research-review-gates.md
+      ai-llm:             references/health-research-review-gates.md
+      instrument:         references/health-research-review-gates.md
+    section:
+      quantitative:       量性研究
+      qualitative:        質性研究
+      mixed-methods:      混合方法研究
+      review:             系統性與範疇性回顧
+      education-dbr:      教育介入與設計本位研究
+      ai-llm:             AI／LLM 應用研究
+      instrument:         問卷與量表發展
+    multi: true
+
+  language:
+    detect: |
+      稿件語言。en 或 zh-tw。審稿人報告與綜合段一律英文，「中文核對」區塊一律繁中；
+      此軸只影響 evidence pointer 的引用方式（中文稿件以章節標題與「表 3-1」式編號定位）。
+    values:
+      en: null
+      zh-tw: null
+    default: en
+    multi: false
+
+references:
+  on_demand:
+    - condition: 執行完整的隔離審查流程、準備不可變審查包，或決定評估順序
+      path: references/reviewer-workflow.md
+    - condition: 建立內部疑慮清單、校準 Major/Minor 嚴重度與 Blocking 狀態、檢查技術覆蓋度，或把疑慮錨定到稿件的 claim 與證據位置
+      path: references/technical-concern-taxonomy.md
+    - condition: 稿件研究設計明確屬於量性、質性、混合方法、系統性或範疇性回顧、教育介入／DBR、AI／LLM 應用、問卷與量表發展之一；只載入對應章節
+      path: references/health-research-review-gates.md
+    - condition: 撰寫或稽核互盲審稿人報告（Major Concerns、Minor Comments、Blocking 旗標、事後綜合、中文核對區塊）
+      path: references/report-structure.md
+    - condition: 維持審稿人互盲，或防止捏造身分、編輯決定、不當的審稿人角色宣稱
+      path: references/role-boundaries.md
+    - condition: 交付前最終的隔離、嚴重度、Blocking、落地性、不捏造、覆蓋度與審稿風險 QA
+      path: references/qa-checklist.md
+    - condition: 檢查稿件自我一致；摘要數字與方法計數對不上、同一指標兩種精度、正文超越式用語被自己的表格反駁、誤差線重疊卻宣稱優勢、內部摘要互相矛盾；這些是審稿人最便宜的發現，應列入 Major 或 Minor 並引用矛盾的表格
+      path: ../bob-shared/core/consistency-sweep.md
+    - condition: 需要檢查 IRB 核准、知情同意、個資保護、EQUATOR 準則對應表，或生成式 AI 使用揭露的報告要件
+      path: ../bob-shared/core/health-research-compliance.md
