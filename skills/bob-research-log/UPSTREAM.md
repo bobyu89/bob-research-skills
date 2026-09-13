@@ -46,7 +46,7 @@
 | 2 | `manifest.yaml` 每個路徑真實存在 | 8 個路徑全部存在；本 skill 不引用 bob-shared |
 | 3 | `python tools/s2twp.py --check` 掃描 skill 內全部 `.md` `.yaml` | exit 0 |
 | 4 | 禁用字串 grep（規格第 7 節第 4 項所列的八個上游 skill 名稱與六個中國大陸平台名稱；為通過 s2twp 檢查，本檔不逐字重列） | 只出現在 `UPSTREAM.md` |
-| 5 | README 三個範例提示詞用台灣情境 | 通過（宋老師 meeting 錄音轉錄、V4 使用者測試 P03 的 SUS 與放聲思考、三軍總醫院 IRB 補件） |
+| 5 | README 三個範例提示詞用台灣情境 | 通過（指導教授 meeting 錄音轉錄、V4 使用者測試 P03 的 SUS 與放聲思考、醫院 IRB 補件） |
 | 6 | 不新增未標查核日期的硬編碼期刊數字 | 通過；本 skill 不涉及期刊數字，SUS 未寫任何常模或切點 |
 | 附 | `SKILL.md` 行數 ≤ 250 | 148 行 |
 | 附 | 檔案數 | 10（不含本檔） |

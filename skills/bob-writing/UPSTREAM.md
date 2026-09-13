@@ -108,7 +108,7 @@
 - 僅 UPSTREAM.md 含上游名稱：通過
 
 ### 5. README.md 三個台灣情境範例
-- README 含台灣情境關鍵詞的行數：4，三個範例提示詞分別涉及 DBR／Tanner／SUS、護理雜誌／結構式摘要、Nurse Education Today／三軍總醫院 IRB：通過
+- README 含台灣情境關鍵詞的行數：4，三個範例提示詞分別涉及 DBR／Tanner／SUS、護理雜誌／結構式摘要、Nurse Education Today／醫院 IRB：通過
 
 ### 6. 硬編碼期刊數字
 - 新寫檔案未寫死期刊字數或圖表上限；出現的比例與分數為示例並標示。上游保留的 Nature 系列片段（nature.md、nature-family.md、nat-comms.md、nat-mach-intell.md）與 references/summary-paragraph-broad-audience.md、nat-comms-2025-corpus.md 含上游原有數字，檔首或 manifest 已註明非預設、以期刊官網為準：通過（附條件）

@@ -12,8 +12,8 @@
 
 ## 1. 使用者是誰（所有內容都為這個人服務）
 
-- 游明勳（Bob），國防醫學院護理學研究所 **專科護理師（NP）組** 碩士生，指導教授宋建美。臨床背景為腫瘤／內科護理。
-- 碩士論文：**結合生成式 AI 與檢索增強技術（RAG）之專科護理師臨床推理學習系統**。研究設計為 **設計本位研究（Design-Based Research, DBR）**，理論框架 Tanner 臨床判斷模型，問診框架 LQQOPERA；資料含量性（SUS 系統可用性量表、自編問卷、系統日誌、token 成本）與質性（放聲思考、半結構式訪談）。已通過計畫書口試（2026-08-12），IRB 送三軍總醫院。
+- 游明勳（Bob），國防醫學院護理學研究所 **專科護理師（NP）組** 碩士生，有指導教授指導（姓名略）。臨床背景為腫瘤／內科護理。
+- 碩士論文：**結合生成式 AI 與檢索增強技術（RAG）之專科護理師臨床推理學習系統**。研究設計為 **設計本位研究（Design-Based Research, DBR）**，理論框架 Tanner 臨床判斷模型，問診框架 LQQOPERA；資料含量性（SUS 系統可用性量表、自編問卷、系統日誌、token 成本）與質性（放聲思考、半結構式訪談）。已通過計畫書口試（2026-08-12），IRB 送至醫學中心審查。
 - 其他進行中的科研工作：範疇性文獻回顧（scoping review，JBI／PRISMA-ScR）、概念分析（Walker & Avant）、失樂感（anhedonia）監測平台的問卷資料與 SPSS 分析、護理師國考題庫、腫瘤衛教機器人、iThome 鐵人賽「研究生的論文工具箱」系列。
 - 投稿目標多為 **護理／醫學教育／數位健康** 期刊（例如 Journal of Advanced Nursing、International Journal of Nursing Studies、Nurse Education Today、Nurse Education in Practice、JMIR 系列、Journal of Nursing Research、BMC Medical Education、Computers, Informatics, Nursing）以及台灣期刊（護理雜誌、護理研究、台灣專科護理師學刊、醫學教育）。**不是** Nature／Science／Cell。
 - 引用格式一律 **APA 第七版**。論文正文用全形標點（，：（）），引用括號用半形；內文字型標楷體；表格與圖說有固定樣式；Word 為主要交付格式。

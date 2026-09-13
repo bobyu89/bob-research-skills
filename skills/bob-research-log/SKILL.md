@@ -43,7 +43,7 @@ date: 2026-09-06
 type: iteration            # iteration / version / test-session / meeting / irb / anomaly
 project: NP 臨床推理學習系統   # 專案名稱，同一專案保持一致
 version: V4                # 系統版本；與版本無關時填 null
-participants: [游明勳, 宋建美]   # 出席者或受試者代號；受試者一律用代號
+participants: [研究者, 指導教授]   # 出席者或受試者代號；受試者一律用代號
 tags: [DBR, RAG, Tanner]
 status: open               # open / done / blocked
 next_actions:
@@ -138,7 +138,7 @@ attachments: []            # 相對路徑
 | 放聲思考與訪談的質性編碼 | `mixed-methods-research` 或使用者自行處理 | 只保留逐字稿路徑與現場觀察摘要 |
 | 會議紀錄要做成正式 Word 文件 | `docx` | 提供 Markdown 內容 |
 | 日誌中的圖要做成論文圖 | `bob-figure` | 提供資料檔路徑與觀察重點 |
-| IRB 文件本身的撰寫或修正案內容 | 使用者依三軍總醫院 IRB 範本處理 | 只記錄送審事件、日期與待辦 |
+| IRB 文件本身的撰寫或修正案內容 | 使用者依送審醫院 IRB 範本處理 | 只記錄送審事件、日期與待辦 |
 
 ## 邊界
 

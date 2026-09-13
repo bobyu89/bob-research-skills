@@ -11,7 +11,7 @@ date: 2026-08-20
 type: iteration
 project: NP 臨床推理學習系統
 version: V4
-participants: [游明勳, 宋建美]
+participants: [研究者, 指導教授]
 tags: [DBR, RAG, Tanner, LQQOPERA, 提示詞]
 status: open
 next_actions:
